@@ -1,0 +1,18 @@
+/* body {
+  background-color: lightcyan;
+} */
+
+#gamebox {
+  margin: auto;
+  width: 60%;
+  z-index: 9;
+}
+
+#maintitle {
+  text-align: center;
+
+}
+
+#instruction {
+  text-align: center;
+}
