@@ -1,27 +1,25 @@
+import { createGameTable } from "./modules/createGameTable.js";
+
 let toPlay = "X";
 
-// helper ranges
-range3 = [0, 1, 2];
-range9 = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-
 // initialize game state
-const state = [];
-for (i in range9) {
-  const row = [];
-  for (j in range9) {
-    row.push(0);
-  }
-  state.push(row);
-}
+const state = [
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+];
 
-const ministate = [];
-for (i in range3) {
-  const row = [];
-  for (j in range3) {
-    row.push(0);
-  }
-  ministate.push(row);
-}
+const ministate = [
+  [0, 0, 0],
+  [0, 0, 0],
+  [0, 0, 0],
+];
 
 // getLocalState takes as input the coordinates of a point,
 // returns the state of the 3x3 square it belongs to
@@ -29,9 +27,9 @@ const getLocalState = (x, y) => {
   const output = [];
   const xStart = 3 * Math.floor(x / 3);
   const yStart = 3 * Math.floor(y / 3);
-  for (i = 0; i < 3; i++) {
+  for (let i = 0; i < 3; i++) {
     const row = [];
-    for (j = 0; j < 3; j++) {
+    for (let j = 0; j < 3; j++) {
       row.push(state[xStart + i][yStart + j]);
     }
     output.push(row);
@@ -50,7 +48,7 @@ const squareFull = (input) => {
 // squareWon takes as input a 3x3 array of 0's, 1's, and -1's
 // returns +/-1 if +/-1 wins, 0 otherwise
 const squareWon = (input) => {
-  for (i = 0; i < 3; i++) {
+  for (let i = 0; i < 3; i++) {
     const rowsum = input[i][0] + input[i][1] + input[i][2]; // rows
     if (rowsum === 3) return 1; // cross wins
     if (rowsum === -3) return -1; // naught wins
@@ -76,7 +74,7 @@ const changeInstruction = (message) => {
   document.getElementById("instruction").innerHTML = message;
 };
 
-const toId = (i, j) => i.toString() + j.toString();
+const toId = (i, j) => "el" + i.toString() + j.toString();
 
 const clickSquare = (x, y) => () => {
   const current = document.getElementById(toId(x, y));
@@ -95,6 +93,7 @@ const clickSquare = (x, y) => () => {
   toPlay = toPlay === "X" ? "O" : "X";
   const winner = squareWon(ministate);
 
+  let message = "";
   if (winner === 1) {
     message = "X wins!";
   } else if (winner === -1) {
@@ -115,12 +114,13 @@ const clickSquare = (x, y) => () => {
   // check if the square of the next move is already full
   const full = squareFull(getLocalState(3 * (x % 3), 3 * (y % 3)));
 
-  for (i in range9) {
-    for (j in range9) {
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
       const div = document.getElementById(toId(i, j));
 
       const enabled = !state[i][j] && full;
-      div.style.backgroundColor = !state[i][j] && full ? "yellow" : "white";
+      div.style.backgroundColor = !state[i][j] && full ? "yellow" : "";
+      div.style.border = !state[i][j] && full ? "5px solid red" : "";
       div.onclick =
         !state[i][j] && full
           ? clickSquare(i, j)
@@ -130,6 +130,7 @@ const clickSquare = (x, y) => () => {
 
       if (Math.floor(i / 3) === x % 3 && Math.floor(j / 3) === y % 3) {
         div.style.backgroundColor = !state[i][j] && !full ? "yellow" : "white";
+        div.style.border = !state[i][j] && !full ? "5px solid red" : "";
         div.onclick =
           !state[i][j] && !full
             ? clickSquare(i, j)
@@ -142,43 +143,53 @@ const clickSquare = (x, y) => () => {
   current.style.backgroundColor = "pink";
 };
 
-const mainbox = document.getElementById("gamebox");
-const instruction = document.createElement("div");
-instruction.id = "instruction";
+// create game area and instruction line
+const gamebox = document.getElementById("gamebox");
+//const instruction = document.createElement("div");
+//instruction.id = "instruction";
+const instruction = document.getElementById("instruction");
 instruction.innerHTML = "X starts";
-instruction.style = "font-size: 40px;";
-mainbox.appendChild(instruction);
+//instruction.style = "font-size: 40px;";
+//gamebox.appendChild(instruction);
 
-const table = document.createElement("table");
-const row1 = document.createElement("tr");
-mainbox.appendChild(table);
+// create game table
 
-for (i in range9) {
-  const row = document.createElement("tr");
-  for (j in range9) {
-    const el = document.createElement("td");
-    const div = document.createElement("div");
-    el.appendChild(div);
+createGameTable(gamebox);
 
-    div.id = i.toString() + j.toString();
-    div.className = "active";
-    div.onclick = clickSquare(i, j);
-    div.style =
-      "height: 70px; width: 90px; font-size: 60px; text-align: center";
+// const table = document.createElement("table");
+// gamebox.appendChild(table);
+// table.id = "bigtable";
 
-    el.style = "border: 1px solid black";
+// for (let i = 0; i < 3; i++) {
+//   const bigrow = document.createElement("tr");
+//   table.appendChild(bigrow);
 
-    if (i % 3 === 0) {
-      el.style.borderTop = "3px solid black";
-    }
+//   for (let j = 0; j < 3; j++) {
+//     const bigel = document.createElement("td");
+//     bigel.classList.add("bigel");
+//     bigel.id = "bigel" + i.toString() + j.toString();
+//     bigrow.appendChild(bigel);
 
-    if (j % 3 === 0) {
-      el.style.borderLeft = "3px solid black";
-    }
+//     const subtable = document.createElement("table");
+//     subtable.classList.add("subtable");
+//     bigel.appendChild(subtable);
 
-    row.appendChild(el);
-  }
-  table.appendChild(row);
-}
+//     for (let k = 0; k < 3; k++) {
+//       const row = document.createElement("tr");
+//       subtable.appendChild(row);
 
-table.style = "border: 3px solid black; border-collapse: collapse;";
+//       for (let l = 0; l < 3; l++) {
+//         const el = document.createElement("td");
+//         el.id = "el" + (3 * i + k).toString() + (3 * j + l).toString();
+//         el.classList.add("el");
+//         el.onclick = clickSquare(3 * i + k, 3 * j + l);
+
+//         el.classList.add((3 * i + 3 * j + k + l) % 2 ? "odd" : "even");
+
+//         row.appendChild(el);
+//       }
+//     }
+//   }
+// }
+
+//gamegrid.style = "border: 3px solid black; border-collapse: collapse;";
