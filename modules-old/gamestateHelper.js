@@ -1,3 +1,5 @@
+/*
+
 // smallToLocal returns state of 3x3 square given by (xsmall, ysmall)
 export const smallToLocal = (bigstate, { xsmall, ysmall }) => {
   const localstate = [];
@@ -44,14 +46,14 @@ export const currentFull = (bigstate, { x, y }) => {
 
 // nextFull checks if the square the next player must play is already full
 // when previous player played (x,y)
-export const nextFull = (gamestate) => {
-  const bigstate = gamestate.bigstate;
-  const x = gamestate.last.x;
-  const y = gamestate.last.y;
-  return squareFull(smallToLocal(bigstate, nextSmallCoords({ x, y })));
-};
+// export const nextFull = (gamestate) => {
+//   const bigstate = gamestate.bigstate;
+//   const x = gamestate.last.x;
+//   const y = gamestate.last.y;
+//   return squareFull(smallToLocal(bigstate, nextSmallCoords({ x, y })));
+// };
 
-export const nextFull2 = (bigstate, { x, y }) => {
+export const nextFull = (bigstate, { x, y }) => {
   return squareFull(smallToLocal(bigstate, nextSmallCoords({ x, y })));
 };
 
@@ -83,3 +85,4 @@ export const squareWon = (localstate) => {
 export const nextWon = (bigstate, { x, y }) => {
   return squareWon(smallToLocal(bigstate, nextSmallCoords({ x, y })));
 }
+*/
