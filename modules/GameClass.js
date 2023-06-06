@@ -106,9 +106,7 @@ export class Game {
   }
 
   squareDecided({ xsmall, ysmall }) {
-    if (this.squareFull({ xsmall, ysmall })) return true;
-    if (this.squareWon({ xsmall, ysmall })) return true;
-    return false;
+    return this.decided[xsmall][ysmall];
   }
 
   isLegal(move) {
@@ -126,26 +124,62 @@ export class Game {
     return this.testForWin(this.smallstate);
   }
 
+  draw() {
+    if (this.victory()) return false;
+    for (let xsmall = 0; xsmall < 3; xsmall++) {
+      for (let ysmall = 0; ysmall < 3; ysmall++) {
+        if (!this.squareDecided({ xsmall, ysmall })) return false;
+      }
+    }
+    return true;
+  }
+
+  ended() {
+    return this.victory() || this.draw()
+  }
+
   log() {
     console.log(this);
   }
 }
 
-export class ClassicalGame extends Game {
+export class NormalGame extends Game {
   constructor(moves) {
     super(moves);
-    this.variant = "classical";
+    this.variant = "normal";
   }
 
-  // getNextSquare() {
-  //   const last = this.getLast();
-  //   return { xsmall: last.x % 3, ysmall: last.y % 3 };
-  // }
+  getNextSquare() {
+    const last = this.getLast();
+    return { xsmall: last.x % 3, ysmall: last.y % 3 };
+  }
 
   moveInNextSquare(move) {
     const { x, y } = this.getLast();
     const { xsmall, ysmall } = move.getSmallCoords();
     return x % 3 === xsmall && y % 3 === ysmall;
+  }
+
+  getActiveSquares() {
+    const active = [
+      [false, false, false],
+      [false, false, false],
+      [false, false, false],
+    ];
+    const { xsmall, ysmall } = this.getNextSquare();
+    if (!this.squareDecided({ xsmall, ysmall })) {
+      active[xsmall][ysmall] = true;
+      return active;
+    } else {
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (!this.squareDecided({ xsmall: i, ysmall: j })) {
+            active[i][j] = true;
+          }
+        }
+      }
+      return active;
+    }
   }
 
   isLegal(move) {
@@ -181,13 +215,21 @@ export class ReverseGame extends Game {
     // if there are available next moves with reverse rules,
     // test for reverse rule
     const { xsmall: lastx, ysmall: lasty } = this.getLast().getSmallCoords();
-    let count = 0;
+    let availablecount = 0;
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
-        if (!this.bigstate[lastx + 3 * i][lasty + 3 * j]) count += 1;
+        const x = lastx + 3 * i;
+        const y = lasty + 3 * j;
+        const moveavailable =
+          !this.bigstate[x][y] &&
+          !this.squareDecided({
+            xsmall: Math.floor(x / 3),
+            ysmall: Math.floor(y / 3),
+          });
+        if (moveavailable) availablecount += 1;
       }
     }
-    if (count) return move.x % 3 === lastx && move.y % 3 === lasty;
+    if (availablecount) return move.x % 3 === lastx && move.y % 3 === lasty;
 
     return true;
   }
