@@ -15,12 +15,9 @@ html {
 
 body {
   font-family: courier, sans-serif;
-  /* font-family: sans-serif; */
   margin: 0;
   height: 100%;
-  /* background-color: rgb(224, 233, 231); */
   background-color: rgb(219, 226, 235);
-  /* border: 10px solid black; */
 }
 
 .container {
@@ -29,7 +26,6 @@ body {
   position: relative;
   top: 0;
   margin: auto;
-  /* background-color: aliceblue; */
 }
 
 @media (min-width: 992px) {
@@ -45,77 +41,23 @@ h1 {
 
 .box {
   user-select: none;
-  /* position: relative; */
   font-family: Raleway, sans-serif;
   container-type: size;
 
   width: 70%;
   padding-top: 70%;
   float: left;
-  /* position: absolute; */
-  /* top: 5%; */
-  /* left: 0%; */
-}
-
-.announcement {
-  z-index: 9;
-  position: absolute;
-  height: 40%;
-  width: 60%;
-  background-color: white;
-  left: 20%;
-  top: 30%;
-  text-align: center;
-  border: 1px solid black;
-  border-radius: 10px;
-  background-color: rgb(202, 202, 202);
-}
-
-#alertbox {
-  display: none;
-
-  z-index: 9;
-  position: absolute;
-  /* height: 40%; */
-  /* height: 30cqw; */
-  width: 70%;
-  left: 15%;
-  top: 30%;
-  text-align: center;
-  border: 1px solid black;
-  /* border-radius: 4px; */
-  background-color: rgb(202, 202, 202);
-  background-color: rgb(240, 209, 197);
-}
-
-#alertbox > h2 {
-  font-size: 30px;
-}
-
-#alertbox > p {
-  font-size: 20px;
-}
-
-#alertbox > button {
-  font-size: 30px;
-  margin: 20px;
-  margin-top: 0;
-  /* position: absolute; */
-  /* top: 0px; */
-  /* left: 30%; */
 }
 
 #newgamebuttons {
   text-align: center;
-  display: inline;
   position: relative;
-  /* top: -20px; */
+  
   background-color: white;
   width: 28%;
-  height: 100px;
   float: right;
   margin-top: 5%;
-  /* margin-bottom: 5%; */
+  
   border: 2px solid rgb(116, 116, 116);
   border-radius: 5px;
   box-shadow: 1px 1px 3px #353535;
@@ -125,9 +67,11 @@ h1 {
   font-family: courier, sans-serif;
   padding: 5px;
   font-size: 15px;
+  margin-bottom: 15px;
 }
 
 #information {
+  display: none;
   float: right;
   position: relative;
   text-align: center;
@@ -143,7 +87,6 @@ h1 {
   box-shadow: 1px 1px 3px #353535;
 
   background-color: white;
-  padding: 7px;
 }
 
 #instruction {

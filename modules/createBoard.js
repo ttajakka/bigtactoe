@@ -1,4 +1,4 @@
-export const createTable = (box) => {
+export const createBoard = (box) => {
   const maintable = document.createElement("table");
   maintable.id = "maintable";
   box.appendChild(maintable);
@@ -20,6 +20,10 @@ export const createTable = (box) => {
       const square = document.createElement("div");
       square.classList.add("square");
       maintd.appendChild(square);
+
+      const tdborder = document.createElement("div");
+      tdborder.classList.add("tdborder");
+      maintd.appendChild(tdborder);
 
       const table = document.createElement("table");
       table.classList.add("table");
@@ -43,20 +47,16 @@ export const createTable = (box) => {
           }
           td.id = "td" + (3 * i + k).toString() + (3 * j + l).toString();
           tr.appendChild(td);
-          // td.classList.add((k + l) % 2 ? "cross" : "naught")
-          // td.innerText = (k + l) % 2 ? "X" : "O";
 
-          const tddiv = document.createElement('div');
-          tddiv.classList.add('tddiv');
+          const tddiv = document.createElement("div");
+          tddiv.classList.add("tddiv");
           tddiv.id = "tddiv" + (3 * i + k).toString() + (3 * j + l).toString();
           td.appendChild(tddiv);
-          // tddiv.innerText = (k + l) % 2 ? "X" : "";
 
-          const tdbg = document.createElement('div');
-          tdbg.classList.add('tdbg');
+          const tdbg = document.createElement("div");
+          tdbg.classList.add("tdbg");
           tdbg.id = "tdbg" + (3 * i + k).toString() + (3 * j + l).toString();
           td.appendChild(tdbg);
-
         }
       }
     }
@@ -77,19 +77,3 @@ export const createTable = (box) => {
     }
   }
 };
-
-// const gamebox = document.getElementById("box");
-// createTable(gamebox);
-
-// document.getElementById("bg12").classList.add("cross");
-// document.getElementById("oltd12").classList.add("cross");
-// document.getElementById("oltd12").innerText="X"
-
-// document.getElementById("bg20").classList.add("naught");
-// document.getElementById("oltd20").classList.add("naught");
-// document.getElementById("oltd20").innerText="O"
-
-// document.getElementById('tdbg01').classList.add('last')
-// document.getElementById('tdbg55').classList.add('active')
-
-// document.getElementById("bg01").classList.add("active")

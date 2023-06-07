@@ -6,6 +6,7 @@
 
   width: 100%;
   height: 100%;
+  /* z-index: 8; */
 }
 
 .overlaytable {
@@ -58,38 +59,50 @@
   width: 94%;
   top: 3%;
   left: 3%;
-  z-index: 1;
-  border: 0.4cqw solid rgb(143, 143, 143);
+  /* z-index: 9; */
+  /* border: 0.4cqw solid rgb(143, 143, 143); */
   border-radius: 2cqw;
   background-color: white;
+  /* opacity: 50%; */
 }
 
 .bg.cross {
   background-color: lightblue;
-  /* border: 0.4cqw solid rgb(117, 117, 252); */
   border-color: rgb(117, 117, 252);
 }
 
 .bg.naught {
   background-color: rgb(128, 236, 106);
-  /* border: 2px solid green; */
   border-color: green;
 }
 
-.bg.active {
+/* .bg.active {
   border: 0.6cqw solid rgb(201, 42, 36);
-}
-
-/* .maintd {
-  border: 0.6cqw solid rgb(59, 59, 59);
 } */
 
 .square {
   position: relative;
-  z-index: 9;
+  z-index: 8;
   height: 100%;
   text-align: center;
   container-type: size;
+  /* background-color: white; */
+}
+
+.tdborder {
+  pointer-events: none;
+  position: absolute;
+  height: 94%;
+  width: 94%;
+  top: 3%;
+  left: 3%;
+  z-index: 9;
+  border: 0.4cqw solid rgb(143, 143, 143);
+  border-radius: 2cqw;
+}
+
+.maintd.active > .tdborder {
+  border: 0.6cqw solid rgb(187, 75, 0);
 }
 
 .table {
@@ -113,12 +126,7 @@
 }
 
 .tddiv {
-  position: absolute;
-  height: 96%;
-  width: 96%;
-  top: 7%;
-  left: 2%;
-  /* border-radius: 15px; */
+  position: relative;
   z-index: 9;
 }
 
@@ -132,10 +140,11 @@
 
 .tdbg {
   position: absolute;
-  height: 88%;
-  width: 88%;
-  top: 6%;
-  left: 6%;
+  height: 84%;
+  width: 84%;
+  top: 8%;
+  left: 8%;
+  
   z-index: 1;
   border-radius: 5cqw;
 }
@@ -147,58 +156,22 @@
 
 .tdbg.last {
   opacity: 50%;
-  /* background-color: chocolate; */
   background-color: rgb(175, 160, 149);
 }
 
-#maintd00,
-#maintd01,
-#maintd02,
-#oltd00,
-#oltd01,
-#oltd02,
-#td00,
-#td01,
-#td02,
 .td-top {
   border-top: 0;
 }
 
-#maintd20,
-#maintd21,
-#maintd22,
-#oltd20,
-#oltd21,
-#oltd22,
-#td20,
-#td21,
-#td22,
 .td-bottom {
   border-bottom: 0;
 }
 
-#maintd00,
-#maintd10,
-#maintd20,
-#oltd00,
-#oltd10,
-#oltd20,
-#td00,
-#td10,
-#td20,
 .td-left {
   border-left: 0;
 }
 
 #maintd02,
-#maintd12,
-#maintd22,
-#oltd02,
-#oltd12,
-#oltd22,
-#td02,
-#td12,
-#td22,
 .td-right {
   border-right: 0;
 }
