@@ -139,6 +139,10 @@ export class Game {
     return this.victory() || this.draw()
   }
 
+  toPlay() {
+    return this.moves.length % 2 === 0 ? "X" : "O"
+  }
+
   log() {
     console.log(this);
   }
