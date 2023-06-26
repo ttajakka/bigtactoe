@@ -3,6 +3,8 @@ import { resetBoard } from "./boardOps.js";
 import { Move, NormalGame, ReverseGame } from "./GameClass.js";
 import { updateBoard } from "./boardOps.js";
 
+const BASEURL = "http://127.0.0.1:3000";
+
 const clickNode = (game, move) => () => {
   if (!game.isLegal(move)) {
     return null;
@@ -41,20 +43,23 @@ const clickNodeOnline = (game, move) => () => {
   }
 
   updateClicksOnline(game);
+  console.log({ x: move.x, y: move.y });
 
-  fetch(`http://127.0.0.1:3000/game/${gameID}`, {
+  fetch(`${BASEURL}/game/${game.gameID}`, {
     method: "POST",
     headers: {
       Accept: "application/json",
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      move: move,
+      move: { x: move.x, y: move.y },
     }),
   })
     .then((res) => res.json())
     .then((res) => {
-      console.log('from clickPlay:', res)
-      
+      console.log("from response to POST:", res);
+      waitForOpponent(game);
+
       // document.getElementById("game-counter").innerText = res.count;
       // const playButton = document.getElementById("play-button");
       // playButton.innerText = "Opponent's turn"
@@ -74,15 +79,43 @@ const updateClicks = (game) => {
   }
 };
 
-const updateClicksOnline = (gameID, game, side) => {
+const updateClicksOnline = (game, side) => {
   for (let x = 0; x < 9; x++) {
     for (let y = 0; y < 9; y++) {
       document.getElementById(toid("td", { x, y })).onclick =
         side === game.toPlay()
-          ? clickNodeOnline(gameID, game, new Move(x, y))
+          ? clickNodeOnline(game, new Move(x, y))
           : () => null;
     }
   }
+};
+
+const activateClicks = (game) => {
+  for (let x = 0; x < 9; x++) {
+    for (let y = 0; y < 9; y++) {
+      document.getElementById(toid("td", { x, y })).onclick = clickNodeOnline(
+        game,
+        new Move(x, y)
+      );
+    }
+  }
+};
+
+const waitForOpponent = (game) => {
+  for (let x = 0; x < 9; x++) {
+    for (let y = 0; y < 9; y++) {
+      document.getElementById(toid("td", { x, y })).onclick = () => null;
+    }
+  }
+  fetch(`${BASEURL}/game/${game.gameID}`)
+    .then((res) => res.json())
+    .then((res) => {
+      // console.log(res);
+      const { x, y } = res;
+      game.update(new Move(x, y));
+      updateBoard(game);
+      activateClicks(game);
+    });
 };
 
 export const clickNewGame = (mode) => () => {
@@ -98,16 +131,22 @@ export const clickNewGame = (mode) => () => {
 export const clickNewOnline = (mode) => () => {
   document.getElementById("modeinfo").innerText = `rules: ${mode}`;
   document.getElementById("information").style.display = "initial";
-  changeInstruction("Waiting for opponent...");
-  fetch("http://127.0.0.1:3000/newgame")
+  changeInstruction("Finding an opponent...");
+  fetch(`${BASEURL}/newgame`)
     .then((res) => res.json())
     .then((res) => {
       const { gameID, side } = res;
       console.log("from clickNewGame:", res);
       changeInstruction("Game id: " + gameID + ", you play: " + side);
-      // document.getElementById("box").style.display = "initial";
       resetBoard();
-      const game = mode === "normal" ? new NormalGame() : new ReverseGame();
-      updateClicksOnline(gameID, game, side);
+      const game =
+        mode === "normal" ? new NormalGame(gameID) : new ReverseGame(gameID);
+
+      if (side === "X") {
+        activateClicks(game);
+      }
+      if (side === "O") {
+        waitForOpponent(game);
+      }
     });
 };

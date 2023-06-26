@@ -13,6 +13,7 @@ export class Move {
 
 export class Game {
   variant;
+  gameID = null;
   moves = [];
   bigstate = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -35,6 +36,10 @@ export class Game {
     [false, false, false],
     [false, false, false],
   ];
+
+  constructor(gameID) {
+    this.gameID = gameID;
+  }
 
   update(move) {
     this.moves.push(move);

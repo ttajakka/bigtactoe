@@ -16,14 +16,12 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/newgame", (req, res) => {
-  console.log('new GET request to /newgame,', newGames, ongoingGames)
-  console.log("newGames.length:", newGames.length)
+  // console.log('new GET request to /newgame,', newGames, ongoingGames)
   if (newGames.length > 0) {
     const { gameID, side: opside } = newGames.pop().handler();
     const side = opside === "X" ? "O" : "X";
-    console.log({ gameID, side })
+    ongoingGames[gameID] = { gameID, moves: [], handler: () => null };
     res.json({ gameID, side });
-    ongoingGames[gameID] = { handler: () => null };
   } else {
     const gameID = createID();
     const side = Math.floor(2 * Math.random()) ? "X" : "O";
@@ -32,8 +30,25 @@ app.get("/newgame", (req, res) => {
       return { gameID, side };
     };
     newGames.push({ gameID, handler });
-    console.log(newGames);
+    // console.log(newGames);
   }
+});
+
+app.get("/game/:gameID", (req, res) => {
+  const gameID = req.params.gameID;
+  console.log(`GET to /game/:${gameID}`);
+  ongoingGames[gameID].handler = (move) => {
+    res.json(move);
+  };
+});
+
+app.post("/game/:gameID", (req, res) => {
+  const gameID = req.params.gameID;
+  const move = req.body.move;
+  console.log(`POST to /game/:${gameID}, move:`, move);
+  ongoingGames[gameID].moves.push(move);
+  ongoingGames[gameID].handler(move);
+  res.json({ gameID, move });
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
