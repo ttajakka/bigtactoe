@@ -1,9 +1,8 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const newGames = [];
 const ongoingGames = {};
@@ -13,32 +12,53 @@ const createID = () => {
 };
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.get("/newgame", (req, res) => {
-  // console.log('new GET request to /newgame,', newGames, ongoingGames)
-  if (newGames.length > 0) {
-    const { gameID, side: opside } = newGames.pop().handler();
-    const side = opside === "X" ? "O" : "X";
-    ongoingGames[gameID] = { gameID, moves: [], handler: () => null };
-    res.json({ gameID, side });
-  } else {
+  if (newGames.length === 0) {
     const gameID = createID();
     const side = Math.floor(2 * Math.random()) ? "X" : "O";
+    console.log(`GET to /newgame, new gameID: ${gameID}, side: ${side}`);
+
+    let timer = null;
+
     const handler = () => {
-      res.json({ gameID, side });
-      return { gameID, side };
+      res.send({ gameID, side });
     };
-    newGames.push({ gameID, handler });
-    // console.log(newGames);
+    newGames.push({ gameID, side, handler });
+
+    timer = setTimeout(() => {
+      console.log("no games available");
+      res.status(200).send({ message: "timeout: no games available" });
+      newGames.pop();
+    }, 4000);
+  } else {
+    const { gameID, side: opSide, handler: opHandler } = newGames.pop();
+    const side = opSide === "X" ? "O" : "X";
+    ongoingGames[gameID] = { gameID, moves: [], handler: () => null };
+    if (side === "O") {
+      res.send({ gameID, side });
+      ongoingGames[gameID].handler = opHandler;
+    } else {
+      opHandler();
+      ongoingGames[gameID].handler = () => {
+        res.send({ gameID, side });
+      };
+    }
   }
 });
 
 app.get("/game/:gameID", (req, res) => {
   const gameID = req.params.gameID;
-  console.log(`GET to /game/:${gameID}`);
-  ongoingGames[gameID].handler = (move) => {
-    res.json(move);
+
+  // call previous handler
+  ongoingGames[gameID].handler();
+
+  // register new handler
+  ongoingGames[gameID].handler = () => {
+    const moves = ongoingGames[gameID].moves;
+    const move = moves[moves.length - 1];
+    res.send(move);
   };
 });
 
@@ -47,8 +67,11 @@ app.post("/game/:gameID", (req, res) => {
   const move = req.body.move;
   console.log(`POST to /game/:${gameID}, move:`, move);
   ongoingGames[gameID].moves.push(move);
-  ongoingGames[gameID].handler(move);
-  res.json({ gameID, move });
+  res.send({ gameID, move });
+});
+
+app.get("/", (req, res) => {
+  console.log("GET to /");
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

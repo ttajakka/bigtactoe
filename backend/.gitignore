@@ -1,2 +1,5 @@
 /node_modules
+fly.toml
+.dockerignore
+Dockerfile
 

@@ -8,23 +8,57 @@
   </head>
   <body>
     <div class="container">
-      <h1 id="maintitle">BIG TAC TOE</h1>
+      <!-- <h1 id="maintitle">BIG TAC TOE</h1> -->
+      <div class="header" id="mainheader">
+        <span id="maintitle">BIG TAC TOE</span>
+        <ul class="menu" id="mainmenu">
+          <li><a id="playonline">Play online</a></li>
+          <li><a id="study">Study</a></li>
+          <li><a id="about">About</a></li>
+          <li><a id="login">Login</a></li>
+        </ul>
+      </div>
       <div class="box" id="box"></div>
-      <div class="newgamebuttons" id="newgamebuttons">
-        <h3>New game</h3>
-        <button id="newgame">Normal</button>
-        <button id="newreversedgame">Reversed</button>
-      </div>
-      <div class="newgamebuttons" id="newonlinegamebuttons">
-        <h3>Play online</h3>
-        <button id="newonline">Normal</button>
-        <button id="newonlinereversed">Reversed</button>
-      </div>
-      <div id="information">
-        <h3 id="instruction"></h3>
-        <div id="modeinfo"></div>
+      <div id="right-col">
+        <div class="newgamebuttons" id="newgamebuttons">
+          <h3>New game</h3>
+          <button id="newgame">Normal</button>
+          <button id="newreversedgame">Reversed</button>
+        </div>
+        <div class="newgamebuttons" id="newonlinegamebuttons">
+          <h3>Play online</h3>
+          <button id="newonline">Normal</button>
+          <button id="newonlinereversed">Reversed</button>
+        </div>
+        <div id="information">
+          <h3 id="instruction"></h3>
+          <div id="modeinfo"></div>
+        </div>
       </div>
 
+      <div class="box" id="loginbox">
+        <form id="loginform" style="display: none">
+          <div class="container" id="logincontainer">
+            <label for="uname"><b>Username</b></label>
+            <input
+              type="text"
+              placeholder="Enter Username"
+              name="uname"
+              required
+            />
+
+            <label for="psw"><b>Password</b></label>
+            <input
+              type="password"
+              placeholder="Enter Password"
+              name="psw"
+              required
+            />
+
+            <button type="submit">Login</button>
+          </div>
+        </form>
+      </div>
     </div>
   </body>
 </html>

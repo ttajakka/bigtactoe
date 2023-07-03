@@ -1,9 +1,15 @@
 import { changeInstruction, toid } from "./helpers.js";
 import { resetBoard } from "./boardOps.js";
 import { Move, NormalGame, ReverseGame } from "./GameClass.js";
-import { updateBoard } from "./boardOps.js";
+import {
+  updateBoard,
+  removeActive,
+  displayActive,
+  updateSymbols,
+} from "./boardOps.js";
 
 const BASEURL = "http://127.0.0.1:3000";
+// const BASEURL = "https://btt-backend.fly.dev"
 
 const clickNode = (game, move) => () => {
   if (!game.isLegal(move)) {
@@ -31,19 +37,22 @@ const clickNodeOnline = (game, move) => () => {
     return null;
   }
 
+  console.log({ x: move.x, y: move.y });
+
   game.update(move);
-  updateBoard(game);
+  // updateBoard(game);
+  updateSymbols(game);
+  removeActive(game.variant);
 
   if (game.ended()) {
-    changeInstruction(
-      game.victory() ? (game.moves.length % 2 ? "X wins!" : "O wins!") : "Draw"
-    );
+    console.log("GAME ENDED");
+
+    changeInstruction(game.victory() ? "You win!" : "Draw");
   } else {
-    changeInstruction(game.moves.length % 2 ? "O to play" : "X to play");
+    changeInstruction("Opponent's turn");
   }
 
   updateClicksOnline(game);
-  console.log({ x: move.x, y: move.y });
 
   fetch(`${BASEURL}/game/${game.gameID}`, {
     method: "POST",
@@ -58,13 +67,11 @@ const clickNodeOnline = (game, move) => () => {
     .then((res) => res.json())
     .then((res) => {
       console.log("from response to POST:", res);
-      waitForOpponent(game);
-
-      // document.getElementById("game-counter").innerText = res.count;
-      // const playButton = document.getElementById("play-button");
-      // playButton.innerText = "Opponent's turn"
-      // playButton.onclick = () => null;
-      // requestMove(gameID)
+      if (!game.ended()) {
+        waitForOpponent(game);
+      } else {
+        fetch(`${BASEURL}/game/${game.gameID}`).then(() => null);
+      }
     });
 };
 
@@ -91,6 +98,7 @@ const updateClicksOnline = (game, side) => {
 };
 
 const activateClicks = (game) => {
+  changeInstruction("Your turn!");
   for (let x = 0; x < 9; x++) {
     for (let y = 0; y < 9; y++) {
       document.getElementById(toid("td", { x, y })).onclick = clickNodeOnline(
@@ -102,19 +110,34 @@ const activateClicks = (game) => {
 };
 
 const waitForOpponent = (game) => {
+  changeInstruction("Opponent's turn");
   for (let x = 0; x < 9; x++) {
     for (let y = 0; y < 9; y++) {
       document.getElementById(toid("td", { x, y })).onclick = () => null;
     }
   }
+  console.log("making GET to ", game.gameID);
+
   fetch(`${BASEURL}/game/${game.gameID}`)
     .then((res) => res.json())
     .then((res) => {
-      // console.log(res);
+      console.log(res);
       const { x, y } = res;
       game.update(new Move(x, y));
-      updateBoard(game);
-      activateClicks(game);
+
+      updateSymbols(game);
+
+      if (game.ended()) {
+        changeInstruction(game.victory() ? "Opponent wins!" : "Draw");
+      } else {
+        changeInstruction("Your turn!");
+        displayActive(game);
+        activateClicks(game);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      waitForOpponent(game);
     });
 };
 
@@ -132,21 +155,56 @@ export const clickNewOnline = (mode) => () => {
   document.getElementById("modeinfo").innerText = `rules: ${mode}`;
   document.getElementById("information").style.display = "initial";
   changeInstruction("Finding an opponent...");
+
+  requestNewGame();
+
+  // fetch(`${BASEURL}/newgame`)
+  //   .then((res) => res.json())
+  //   .then((res) => {
+  //     const { gameID, side } = res;
+  //     console.log("from clickNewGame:", res);
+  //     resetBoard();
+  //     const game =
+  //       mode === "normal" ? new NormalGame(gameID) : new ReverseGame(gameID);
+
+  //     if (side === "X") {
+  //       activateClicks(game);
+  //     } else {
+  //       waitForOpponent(game);
+  //     }
+  //   })
+  //   .catch((e) => {
+  //     console.log(e);
+  //     changeInstruction("No opponent found. Try again.");
+  //   });
+};
+
+const requestNewGame = () => {
   fetch(`${BASEURL}/newgame`)
     .then((res) => res.json())
     .then((res) => {
-      const { gameID, side } = res;
-      console.log("from clickNewGame:", res);
-      changeInstruction("Game id: " + gameID + ", you play: " + side);
-      resetBoard();
-      const game =
-        mode === "normal" ? new NormalGame(gameID) : new ReverseGame(gameID);
+      if (res.gameID) {
+        const { gameID, side } = res;
+        console.log("from clickNewGame:", res);
+        resetBoard();
+        const game =
+          mode === "normal" ? new NormalGame(gameID) : new ReverseGame(gameID);
 
-      if (side === "X") {
-        activateClicks(game);
-      }
-      if (side === "O") {
-        waitForOpponent(game);
+        if (side === "X") {
+          activateClicks(game);
+        } else {
+          waitForOpponent(game);
+        }
+      } else {
+        console.log('no game found. trying again.')
+        changeInstruction('Finding opponent is taking longer than usual...')
+        requestNewGame()
       }
     });
+  // .catch((e) => {
+  //   console.log(e);
+  //   console.log("no game found. trying again.")
+
+  //   requestNewGame();
+  // });
 };

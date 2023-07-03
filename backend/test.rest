@@ -1,0 +1,24 @@
+GET http://localhost:3000/game/8587573
+
+###
+
+POST http://localhost:3000/game/8587573
+content-type: application/json
+
+{
+  "move": {
+    "x": 2,
+    "y": 3,
+  } 
+}
+
+###
+POST http://localhost:3000/game/8587573
+content-type: application/json
+
+{
+  "move": {
+    "x": 666,
+    "y": 777
+  }
+}
