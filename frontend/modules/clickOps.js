@@ -40,13 +40,11 @@ const clickNodeOnline = (game, move) => () => {
   console.log({ x: move.x, y: move.y });
 
   game.update(move);
-  // updateBoard(game);
   updateSymbols(game);
   removeActive(game.variant);
 
   if (game.ended()) {
     console.log("GAME ENDED");
-
     changeInstruction(game.victory() ? "You win!" : "Draw");
   } else {
     changeInstruction("Opponent's turn");
@@ -156,30 +154,10 @@ export const clickNewOnline = (mode) => () => {
   document.getElementById("information").style.display = "initial";
   changeInstruction("Finding an opponent...");
 
-  requestNewGame();
-
-  // fetch(`${BASEURL}/newgame`)
-  //   .then((res) => res.json())
-  //   .then((res) => {
-  //     const { gameID, side } = res;
-  //     console.log("from clickNewGame:", res);
-  //     resetBoard();
-  //     const game =
-  //       mode === "normal" ? new NormalGame(gameID) : new ReverseGame(gameID);
-
-  //     if (side === "X") {
-  //       activateClicks(game);
-  //     } else {
-  //       waitForOpponent(game);
-  //     }
-  //   })
-  //   .catch((e) => {
-  //     console.log(e);
-  //     changeInstruction("No opponent found. Try again.");
-  //   });
+  requestNewGame(mode);
 };
 
-const requestNewGame = () => {
+const requestNewGame = (mode) => {
   fetch(`${BASEURL}/newgame`)
     .then((res) => res.json())
     .then((res) => {
@@ -198,13 +176,20 @@ const requestNewGame = () => {
       } else {
         console.log('no game found. trying again.')
         changeInstruction('Finding opponent is taking longer than usual...')
-        requestNewGame()
+        requestNewGame(mode)
       }
-    });
-  // .catch((e) => {
-  //   console.log(e);
-  //   console.log("no game found. trying again.")
+    }).catch((e) => {
+      console.log(e);
+      console.log("no game found. trying again.")
 
-  //   requestNewGame();
-  // });
+      requestNewGame();
+    });
 };
+
+export const pressLogin = () => {
+  const usernameToSend = document.getElementById("uname").value
+  const passwordToSend = document.getElementById("psw").value
+  console.log(usernameToSend);
+  console.log(passwordToSend);
+  return false;
+}

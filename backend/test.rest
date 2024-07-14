@@ -22,3 +22,6 @@ content-type: application/json
     "y": 777
   }
 }
+
+###
+GET http://localhost:3000/newgame

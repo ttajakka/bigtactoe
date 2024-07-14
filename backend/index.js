@@ -15,14 +15,16 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/newgame", (req, res) => {
+  console.log("GET to /newgame")
   if (newGames.length === 0) {
     const gameID = createID();
     const side = Math.floor(2 * Math.random()) ? "X" : "O";
-    console.log(`GET to /newgame, new gameID: ${gameID}, side: ${side}`);
+    console.log(`new gameID: ${gameID}, side: ${side}`);
 
     let timer = null;
 
     const handler = () => {
+      clearTimeout(timer)
       res.send({ gameID, side });
     };
     newGames.push({ gameID, side, handler });
@@ -30,8 +32,8 @@ app.get("/newgame", (req, res) => {
     timer = setTimeout(() => {
       console.log("no games available");
       res.status(200).send({ message: "timeout: no games available" });
-      newGames.pop();
-    }, 4000);
+      newGames.splice(newGames.indexOf(g => g.gameID != gameID), 1)
+    }, 30000);
   } else {
     const { gameID, side: opSide, handler: opHandler } = newGames.pop();
     const side = opSide === "X" ? "O" : "X";
