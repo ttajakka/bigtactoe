@@ -1,8 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-
 const app = express();
-const PORT = process.env.PORT || 3000;
+
+const { PORT } = require("./util/config")
+const { connectToDatabase } = require("./util/db")
+
+const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
 
 const newGames = [];
 const ongoingGames = {};
@@ -13,6 +17,9 @@ const createID = () => {
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 app.get("/newgame", (req, res) => {
   console.log("GET to /newgame")
@@ -76,4 +83,10 @@ app.get("/", (req, res) => {
   console.log("GET to /");
 });
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+const start = async () => {
+  await connectToDatabase()
+  app.listen(PORT, () => { console.log(`Listening on port ${PORT}`) });
+}
+
+start()
