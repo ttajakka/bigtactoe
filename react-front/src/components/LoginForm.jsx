@@ -1,55 +1,27 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import loginService from "../services/login"
 
-const LoginContainer = ({ user, handleLogin }) => {
-  if (user)
-    return (
-      <form id="loginform">
-        <button type="submit" id="loginsubmit">Logout</button>
-      </form>
-    )
-  else
-    return (
-      <form id="loginform" onSubmit={handleLogin}>
-        <div className="container" id="logincontainer">
-          <input
-            type="text"
-            placeholder="Enter Username"
-            id="uname"
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
+const LoginForm = ({ user, setUser }) => {
+  const navigate = useNavigate()
 
-          <input
-            type="password"
-            placeholder="Enter Password"
-            id="psw"
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-
-          <button type="submit" id="loginsubmit">Login</button>
-        </div>
-      </form>
-    )
-}
-
-const LoginForm = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [user, setUser] = useState()
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log('logging with', username, password);
-
     try {
       const user = await loginService.login({
         username, password
       })
+      window.localStorage.setItem(
+        'loggedBTTuser', JSON.stringify(user)
+      )
+      // gameService.setToken(user.token)
       setUser(user)
       setUsername("")
       setPassword("")
+      navigate("/")
     } catch (err) {
       console.log("Wrong credentials");
     }
@@ -58,18 +30,14 @@ const LoginForm = () => {
   return (
     <div className="box" id="loginbox">
       <form id="loginform" onSubmit={handleLogin}>
-        {user
-          ? <div className="container" id="logincontainer">
-            <input type="text"/>
-            <button type="submit" id="loginsubmit">Logout</button>
-          </div>
-          : <div className="container" id="logincontainer">
+        <div className="container" id="logincontainer">
             <input
               type="text"
               placeholder="Enter Username"
               id="uname"
               name="Username"
-              onChange={({ target }) => setUsername(target.value)}
+              value={username}
+              onChange={({ target }) => {setUsername(target.value)}}
             />
 
             <input
@@ -77,11 +45,12 @@ const LoginForm = () => {
               placeholder="Enter Password"
               id="psw"
               name="Password"
-              onChange={({ target }) => setPassword(target.value)}
+              value={password}
+              onChange={({ target }) => {setPassword(target.value)}}
             />
 
             <button type="submit" id="loginsubmit">Login</button>
-          </div>}
+          </div>
       </form>
     </div>
   )

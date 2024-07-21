@@ -1,7 +1,9 @@
 const About = () => {
-  return(
+  return (
     <div id="box" className="box">
-      <p>This is going to be a long story.</p>
+      <div>
+        This is going to be a long story.
+      </div>
     </div>
   )
 }

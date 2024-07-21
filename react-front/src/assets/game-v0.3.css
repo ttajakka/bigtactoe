@@ -94,6 +94,12 @@ h1 {
   float: left;
 }
 
+.box > div {
+  position: absolute;
+  font-family: Courier, sans-serif;
+  top: 0;
+}
+
 .newgamebuttons {
   text-align: center;
   position: relative;
@@ -136,4 +142,10 @@ h1 {
 
 #instruction {
   text-align: center;
+}
+
+#logout-button {
+  position: absolute;
+  left: 20%;
+  width: 60%;
 }
