@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import PlayOnline from './components/PlayOnline'
-import Study from './components/Study'
+import Analyze from './components/Analyze'
 import About from './components/About'
 import LoginForm from './components/LoginForm'
 import UserPage from './components/UserPage'
@@ -26,7 +26,7 @@ const App = () => {
           <span id="maintitle">BIG TAC TOE</span>
           <div className="menu" id="mainmenu">
             <li><Link id="playonline" to="/">Play online</Link></li>
-            <li><Link id="study" to="/study">Study</Link></li>
+            <li><Link id="analyze" to="/analyze">Analyze</Link></li>
             <li><Link id="about" to="/about">About</Link></li>
             {!user && <li><Link id="login" to="/login">Login</Link></li>}
             {user && <li><Link id="user" to={`/user/${user.username}`}>{user.username}</Link></li>}
@@ -35,7 +35,7 @@ const App = () => {
 
           <Routes>
             <Route path="/" element={<PlayOnline />} />
-            <Route path="/study" element={<Study />} />
+            <Route path="/analyze" element={<Analyze />} />
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<LoginForm user={user} setUser={setUser} />} />
             <Route path="/user/:username" element={<UserPage user={user} setUser={setUser} />} />
