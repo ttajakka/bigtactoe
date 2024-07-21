@@ -1,4 +1,4 @@
-export const initialState = {
+export const initialState = JSON.stringify({
   moves: [],
   bigstate: [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -21,7 +21,7 @@ export const initialState = {
     [false, false, false],
     [false, false, false],
   ]
-}
+})
 
 const ended = (gamestate) => {
   return victory(gamestate) || draw(gamestate)
@@ -115,7 +115,7 @@ const squareFull = (gamestate, { xsmall, ysmall }) => {
 }
 
 export const squareWon = (gamestate, { xsmall, ysmall }) => {
-  const square = getSquare(gamestate, {xsmall, ysmall })
+  const square = getSquare(gamestate, { xsmall, ysmall })
   return testForWin(square);
 }
 

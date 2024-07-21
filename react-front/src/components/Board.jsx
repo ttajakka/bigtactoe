@@ -1,6 +1,4 @@
-import { useState } from 'react'
-
-import { initialState, getActiveSquares, isLegal, squareWon, updateState } from '../gamelogic/gamelogic'
+import { getActiveSquares, isLegal, squareWon, updateState } from '../gamelogic/gamelogic'
 
 const BoardNode = ({ row, col, gamestate, statesetter }) => {
   const clickHandler = () => {
@@ -16,8 +14,6 @@ const BoardNode = ({ row, col, gamestate, statesetter }) => {
   const vert = row % 3 === 0 ? " td-top" : row % 3 === 1 ? "" : " td-bottom"
 
   let tdcls = "td" + hor + vert
-  // tdcls += vert === null ? "" : ` td-${vert}`
-  // tdcls += hor === null ? "" : ` td-${hor}`
 
   const nodevalue = gamestate.bigstate[row][col]
   const symbol = nodevalue == 0 ? "" : nodevalue == 1 ? "X" : "O"
@@ -115,9 +111,7 @@ const OverlayTable = ({ gamestate }) => {
   )
 }
 
-const Board = () => {
-  const [gamestate, setGamestate] = useState(initialState)
-
+const Board = ({gamestate, setGamestate}) => {
 
   return (
     <div id="box" className="box">
