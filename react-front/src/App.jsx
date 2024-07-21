@@ -34,7 +34,7 @@ const App = () => {
         </div>
 
           <Routes>
-            <Route path="/" element={<PlayOnline />} />
+            <Route path="/" element={<PlayOnline user={user} />} />
             <Route path="/analyze" element={<Analyze />} />
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<LoginForm user={user} setUser={setUser} />} />
