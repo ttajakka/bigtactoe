@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { initialState } from "../gamelogic/gamelogic";
+import gameService from "../services/game";
+
 import Board from "./Board";
 import RightColumn from "./RightColumn";
 
@@ -12,8 +14,12 @@ const PlayOnline = ({ user }) => {
     navigate("/login")
   }
 
-  const handleFindOpp = () => {
-    console.log("find opp")
+  const handleFindOpp = async () => {
+    const game = await gameService.getNewGame()
+    console.log(game)
+    if (game.side == "O") {
+      console.log(await gameService.getMove(game.gameID))
+    }
   }
 
   return (

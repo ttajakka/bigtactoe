@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
-
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+
+import gameService from "./services/game"
+
 import PlayOnline from './components/PlayOnline'
 import Analyze from './components/Analyze'
 import About from './components/About'
@@ -15,7 +17,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      // gameService.setToken(user.token)
+      gameService.setUserToken(user.token)
     }
   }, [])
 

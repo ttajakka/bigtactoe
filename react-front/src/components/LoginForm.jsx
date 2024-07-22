@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import loginService from "../services/login"
+import gameService from "../services/game"
 
 const LoginForm = ({ user, setUser }) => {
   const navigate = useNavigate()
@@ -17,7 +18,7 @@ const LoginForm = ({ user, setUser }) => {
       window.localStorage.setItem(
         'loggedBTTuser', JSON.stringify(user)
       )
-      // gameService.setToken(user.token)
+      gameService.setUserToken(user.token)
       setUser(user)
       setUsername("")
       setPassword("")
