@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { initialState } from "../gamelogic/gamelogic";
-import gameService from "../services/game";
+import gameService from "../services/gameService";
+
+import { toPlay, updateState } from "../gamelogic/gamelogic";
 
 import Board from "./Board";
 import RightColumn from "./RightColumn";
 
 const PlayOnline = ({ user }) => {
-  const [gamestate, setGamestate] = useState(JSON.parse(initialState))
+  const inState = { ...JSON.parse(initialState), online: true }
+  const [gamestate, setGamestate] = useState(inState)
 
   const navigate = useNavigate()
   const handleLoginClick = () => {
@@ -16,11 +19,32 @@ const PlayOnline = ({ user }) => {
 
   const handleFindOpp = async () => {
     const game = await gameService.getNewGame()
-    console.log(game)
-    if (game.side == "O") {
-      console.log(await gameService.getMove(game.gameID))
-    }
+    console.log("game received: " + game.gameID + " " + game.side)
+    setGamestate({ ...gamestate, gameID: game.gameID, side: game.side })
   }
+
+  useEffect(() => {
+    console.log("in useEffect, side: " + gamestate.side)
+
+    const nextMove = async () => {
+      if (!gamestate.side) {
+        return null
+      } else if (gamestate.moves.length == 0 && gamestate.side == "O") {
+        console.log("side O, making first getMove req")
+        const oppMove = await gameService.getMove(gamestate.gameID)
+        setGamestate(updateState(gamestate, { ...oppMove }))
+      } else if (toPlay(gamestate) != gamestate.side) {
+        const moveToSend = gamestate.moves[gamestate.moves.length - 1]
+        const sentMove = await gameService.sendMove(gamestate.gameID, { ...moveToSend })
+        console.log("sent move: " + sentMove.move.x + " " + sentMove.move.y)
+        const oppMove = await gameService.getMove(gamestate.gameID)
+        setGamestate(updateState(gamestate, { ...oppMove }))
+      }
+    }
+
+    nextMove()
+
+  }, [gamestate])
 
   return (
     <div>

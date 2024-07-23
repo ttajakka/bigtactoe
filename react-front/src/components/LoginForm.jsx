@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import loginService from "../services/login"
-import gameService from "../services/game"
+import gameService from "../services/gameService"
 
 const LoginForm = ({ user, setUser }) => {
   const navigate = useNavigate()

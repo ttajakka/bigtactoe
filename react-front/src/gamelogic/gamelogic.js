@@ -1,4 +1,5 @@
 export const initialState = JSON.stringify({
+  online: false,
   moves: [],
   bigstate: [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -142,7 +143,7 @@ const testForWin = (square) => {
   return 0;
 }
 
-const toPlay = (gamestate) => {
+export const toPlay = (gamestate) => {
   return gamestate.moves.length % 2 === 0 ? "X" : "O"
 }
 
@@ -165,6 +166,7 @@ export const updateState = (gamestate, move) => {
   newdecided[smallcoords.xsmall][smallcoords.ysmall] = won || full;
 
   return {
+    ...gamestate,
     moves: newmoves,
     bigstate: newbigstate,
     smallstate: newsmallstate,

@@ -1,9 +1,15 @@
-import { getActiveSquares, isLegal, squareWon, updateState } from '../gamelogic/gamelogic'
+import { getActiveSquares, isLegal, squareWon, toPlay, updateState } from '../gamelogic/gamelogic'
 
 const BoardNode = ({ row, col, gamestate, statesetter }) => {
-  const clickHandler = () => {
+  if ( row == 0 && col == 0 ) {
+    console.log("side: " + gamestate.side + ", toPlay: " + toPlay(gamestate))
+  }
+  const clickHandler = async () => {
     const move = { x: row, y: col }
-    if (!isLegal(gamestate, move)) {
+
+    if (gamestate.online && toPlay(gamestate) != gamestate.side) {
+      return null;
+    } else if (!isLegal(gamestate, move)) {
       return null;
     }
 
@@ -53,7 +59,8 @@ const SmallRow = ({ row, firstcol, gamestate, statesetter }) => {
 
 const SmallSquare = ({ row, col, gamestate, statesetter }) => {
   let tdcls = "maintd"
-  if (getActiveSquares(gamestate)[row][col]) {
+  const activate = (!gamestate.online || (toPlay(gamestate) == gamestate.side)) && getActiveSquares(gamestate)[row][col]
+  if (activate) {
     tdcls += " active"
   }
 
@@ -111,7 +118,7 @@ const OverlayTable = ({ gamestate }) => {
   )
 }
 
-const Board = ({gamestate, setGamestate}) => {
+const Board = ({ gamestate, setGamestate }) => {
 
   return (
     <div id="box" className="box">

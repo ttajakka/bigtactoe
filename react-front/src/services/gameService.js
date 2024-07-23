@@ -18,13 +18,24 @@ const getNewGame = async () => {
 }
 
 const getMove = async (gameID) => {
-  console.log("in getMove, gameID: ", gameID)
   const config = {
     headers: { Authorization: userToken }
   }
 
   const response = await axios.get(`${baseUrl}/game/${gameID}`, config)
   return response.data
-} 
+}
 
-export default { getMove, getNewGame, setUserToken }
+const sendMove = async (gameID, { x, y }) => {
+  console.log("in sendMove")
+  const data = { move: { x, y } }
+  console.log(data)
+  const config = {
+    headers: { Authorization: userToken }
+  }
+
+  const response = await axios.post(`${baseUrl}/game/${gameID}`, data, config)
+  return response.data
+}
+
+export default { getMove, sendMove, getNewGame, setUserToken }

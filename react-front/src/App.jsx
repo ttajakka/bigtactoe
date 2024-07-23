@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
-import gameService from "./services/game"
+import gameService from "./services/gameService"
 
 import PlayOnline from './components/PlayOnline'
 import Analyze from './components/Analyze'
