@@ -6,3 +6,5 @@ Dockerfile
 
 *.rest
 .envrc
+.fly-pg-creds
+/dist

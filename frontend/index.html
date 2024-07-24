@@ -1,63 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/x-icon" href="images/tic-tac-toe-icon.svg" />
-    <link rel="stylesheet" type="text/css" href="./styles/game-v0.3.css" />
-    <script type="module" src="game-v0.3.js"></script>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/tic-tac-toe-icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Big Tac Toe</title>
   </head>
   <body>
-    <div class="container">
-      <div class="header" id="mainheader">
-        <span id="maintitle">BIG TAC TOE</span>
-        <ul class="menu" id="mainmenu">
-          <li><a id="playonline">Play online</a></li>
-          <li><a id="study">Study</a></li>
-          <li><a id="about">About</a></li>
-          <li><a id="login">Login</a></li>
-        </ul>
-      </div>
-      <div class="box" id="box"></div>
-      <div id="right-col">
-        <div class="newgamebuttons" id="newgamebuttons">
-          <h3>New game</h3>
-          <button id="newgame">Normal</button>
-          <button id="newreversedgame">Reversed</button>
-        </div>
-        <div class="newgamebuttons" id="newonlinegamebuttons">
-          <h3>Play online</h3>
-          <button id="newonline">Normal</button>
-          <button id="newonlinereversed">Reversed</button>
-        </div>
-        <div id="information">
-          <h3 id="instruction"></h3>
-          <div id="modeinfo"></div>
-        </div>
-      </div>
-
-      <div class="box" id="loginbox">
-        <form id="loginform" style="display: none">
-          <div class="container" id="logincontainer">
-            <label for="uname"><b>Username</b></label>
-            <input
-              type="text"
-              placeholder="Enter Username"
-              id="uname"
-              required
-            />
-
-            <label for="psw"><b>Password</b></label>
-            <input
-              type="password"
-              placeholder="Enter Password"
-              id="psw"
-              required
-            />
-
-            <button type="submit" id="loginsubmit">Login</button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
