@@ -3,12 +3,37 @@ const router = require('express').Router()
 
 const { User } = require("../models")
 
-router.get("/", async (req, res) => {
+const adminCheck = async (req, res, next) => {
+  const { admin_username, admin_password } = req.body
+  if (admin_username != "admin") {
+    return res.status(401).end("No permission")
+  }
+
+  const user = await User.findOne({
+    where: {
+      username: admin_username
+    }
+  })
+
+  const passwordCorrect = user === null
+    ? false
+    : await bcrypt.compare(admin_password, user.passwordhash)
+
+  if (!(user && passwordCorrect)) {
+    return res.status(401).json({
+      error: "No permission"
+    })
+  }
+
+  next()
+}
+
+router.get("/", adminCheck, async (req, res) => {
   const users = await User.findAll()
   res.json(users)
 })
 
-router.post("/", async (req, res) => {
+router.post("/", adminCheck, async (req, res) => {
   const { username, password } = req.body
 
   const saltRounds = 10
@@ -27,7 +52,7 @@ const userFinder = async (req, res, next) => {
   next()
 }
 
-router.get('/:id', userFinder, async (req, res) => {
+router.get('/:id', adminCheck, userFinder, async (req, res) => {
   if (req.user) {
     res.json(req.user)
   } else {
@@ -36,7 +61,7 @@ router.get('/:id', userFinder, async (req, res) => {
 })
 
 
-router.delete("/:id", userFinder, async (req, res) => {
+router.delete("/:id", adminCheck, userFinder, async (req, res) => {
   if (req.user) {
     await req.user.destroy()
   }
