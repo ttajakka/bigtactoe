@@ -17,7 +17,9 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      gameService.setUserToken(user.token)
+      if (user) {
+        gameService.setUserToken(user.token)
+      }
     }
   }, [])
 
@@ -35,13 +37,13 @@ const App = () => {
           </div>
         </div>
 
-          <Routes>
-            <Route path="/" element={<PlayOnline user={user} />} />
-            <Route path="/analyze" element={<Analyze />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/login" element={<LoginForm user={user} setUser={setUser} />} />
-            <Route path="/user/:username" element={<UserPage user={user} setUser={setUser} />} />
-          </Routes>
+        <Routes>
+          <Route path="/" element={<PlayOnline user={user} />} />
+          <Route path="/analyze" element={<Analyze />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/login" element={<LoginForm user={user} setUser={setUser} />} />
+          <Route path="/user/:username" element={<UserPage user={user} setUser={setUser} />} />
+        </Routes>
       </div>
     </Router>
   )
