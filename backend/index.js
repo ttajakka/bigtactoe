@@ -23,7 +23,7 @@ app.use(express.static('dist'))
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 
-app.get("/newgame", (req, res) => {
+app.get("/api/newgame", (req, res) => {
   console.log("GET to /newgame")
   if (newGames.length === 0) {
     const gameID = createID();
@@ -59,7 +59,7 @@ app.get("/newgame", (req, res) => {
   }
 });
 
-app.get("/game/:gameID", (req, res) => {
+app.get("/api/game/:gameID", (req, res) => {
   const gameID = req.params.gameID;
 
   // call previous handler
@@ -73,7 +73,7 @@ app.get("/game/:gameID", (req, res) => {
   };
 });
 
-app.post("/game/:gameID", (req, res) => {
+app.post("/api/game/:gameID", (req, res) => {
   const gameID = req.params.gameID;
   const move = req.body.move;
   console.log(`POST to /game/:${gameID}, move:`, move);
@@ -81,8 +81,9 @@ app.post("/game/:gameID", (req, res) => {
   res.send({ gameID, move });
 });
 
-app.get("/", (req, res) => {
+app.get("/api/", (req, res) => {
   console.log("GET to /");
+  res.send({ message: "Connection OK."})
 });
 
 
