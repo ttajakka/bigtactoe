@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: Raleway;
-  src: url("src/assets/fonts/Raleway-ExtraBold.ttf") format("truetype");
+  src: url("fonts/Raleway-ExtraBold.ttf") format("truetype");
 }
 
 * {
