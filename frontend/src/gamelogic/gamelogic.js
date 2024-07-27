@@ -24,11 +24,11 @@ export const initialState = JSON.stringify({
   ]
 })
 
-const ended = (gamestate) => {
+export const ended = (gamestate) => {
   return victory(gamestate) || draw(gamestate)
 }
 
-const draw = (gamestate) => {
+export const draw = (gamestate) => {
   if (victory(gamestate)) return false;
   for (let xsmall = 0; xsmall < 3; xsmall++) {
     for (let ysmall = 0; ysmall < 3; ysmall++) {
@@ -174,6 +174,12 @@ export const updateState = (gamestate, move) => {
   }
 }
 
-const victory = (gamestate) => {
-  return testForWin(gamestate.smallstate);
+export const victory = (gamestate) => {
+  const code = testForWin(gamestate.smallstate);
+  if (code == 1)
+    return "X"
+  else if (code == -1)
+    return "O"
+  else
+    return 0
 }
