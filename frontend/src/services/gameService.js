@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/api'
+const baseUrl = '/api/games'
 
 let userToken = null
 
