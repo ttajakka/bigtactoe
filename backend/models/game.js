@@ -1,6 +1,9 @@
 const { Model, DataTypes } = require("sequelize");
 const { sequelize } = require("../util/db")
 
+const User = require("./user")
+const Gameresult = require("./gameresult")
+
 class Game extends Model { }
 
 Game.init({
@@ -9,19 +12,39 @@ Game.init({
     primaryKey: true,
     autoIncrement: true
   },
-  username: {
-    type: DataTypes.TEXT,
-    unique: true,
-    allowNull: false
+  crossPlayer: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: User,
+      key: "id"
+    }
   },
-  passwordhash: {
-    type: DataTypes.TEXT,
+  naughtPlayer: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: User,
+      key: "id"
+    }
+  },
+  result: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Gameresult,
+      key: "id"
+    }
+  },
+  moves: {
+    type: DataTypes.ARRAY(DataTypes.INTEGER),
     allowNull: false
   }
 }, {
   sequelize,
   underscored: true,
   timestamps: true,
+  updatedAt: false,
   modelName: "game"
 })
 
